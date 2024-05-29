@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Transaction;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Response;
 
 class TransactionController extends Controller
 {
@@ -20,15 +21,30 @@ class TransactionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $attributes = request()->validate([
+            'product_id' => 'required | int | exists:products,id',
+            'user_id' => 'required | int | exists:users,id',
+            'amount' => 'required | int | min:1',
+        ]);
+
+        $transaction = Transaction::create($attributes);
+        return Response::json($transaction)->setStatusCode(201);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Transaction $transaction)
+    public function show(Transaction $transaction, $id)
     {
-        //
+        $user = User::fineOrFail($id);
+        $price = $user->getPrice();
+
+        $transaction = [
+            'product_id' => Transaction::product()->first()->id,
+            'user_id' => Transaction::user()->first()->id,
+            'amount' => amount,
+            'price' => amount * $price
+        ];
     }
 
     /**
@@ -36,7 +52,12 @@ class TransactionController extends Controller
      */
     public function update(Request $request, Transaction $transaction)
     {
-        //
+        $attributes = request()->validate([
+            'amount' => 'required | int | min:1',
+        ]);
+
+        $transaction = Transaction::update($attributes);
+        return Response::json($transaction)->setStatusCode(201);
     }
 
     /**

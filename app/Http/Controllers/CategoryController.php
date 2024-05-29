@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Response;
 
 class CategoryController extends Controller
 {
@@ -12,7 +13,9 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        //
+        $categories = Category::all();
+        return Response::json($categories)->setStatusCode(200);
+
     }
 
     /**
@@ -20,7 +23,12 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $attributes = $request->validate([
+            'title' => 'required | unique:categories,title | min:5 | max:255 | string',
+        ]);
+
+        $categories = Category::create($attributes);
+        return Response::json($categories)->setStatusCode(201);
     }
 
     /**
@@ -28,7 +36,7 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        //
+        return Response::json($category ->load('products'))->setStatusCode(200);
     }
 
     /**
@@ -36,7 +44,12 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        //
+        $attributes = $request->validate([
+            'title' => 'sometimes | unique:categories,title | min:5 | max:255 | string',
+        ]);
+
+        $categories = Category::update($attributes);
+        return Response::json($categories)->setStatusCode(201);
     }
 
     /**
@@ -44,6 +57,7 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        //
+        $category->delete();
+        return Response::json($category)->setStatusCode(204);
     }
 }

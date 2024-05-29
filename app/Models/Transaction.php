@@ -8,4 +8,22 @@ use Illuminate\Database\Eloquent\Model;
 class Transaction extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'price'
+    ];
+
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
+
+    public function product(){
+        return $this->belongsTo(Product::class);
+    }
+
+
+    public function getPrice(){
+        return $this->product?$this->product->price:'not found';
+    }
+
 }
