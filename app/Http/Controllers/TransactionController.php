@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Response;
 
 class TransactionController extends Controller
@@ -14,7 +15,14 @@ class TransactionController extends Controller
      */
     public function index()
     {
-        //
+        $today = Carbon::now();
+
+        $transactions = Transaction::where('created_at', '<=', $today)
+            ->orderBy('created_at', 'desc')
+            ->with('product')
+            ->get();
+
+        return Response::json($transactions)->setStatusCode(200);
     }
 
     /**
@@ -22,30 +30,30 @@ class TransactionController extends Controller
      */
     public function store(Request $request)
     {
-        $attributes = request()->validate([
+        $request->validate([
             'product_id' => 'required | int | exists:products,id',
+            'user_id' => 'required | int | exists:users,id',
             'amount' => 'required | int | min:1',
         ]);
+        $product = Product::findOrFail($request->product_id);
+        $amount = $request->amount;
+        $price = $product->price * $amount;
+        $transaction = Transaction::create([
+            'user_id' => $request->user_id,
+            'product_id' => $product->id,
+            'amount' => $amount,
+            'price' => $price,
+        ]);
 
-        $transaction = Transaction::create($attributes);
-        $product_price = Product::find(id());
-        return Response::json($transaction->load('product:title,id'))->setStatusCode(201);
+        return Response::json($transaction->load('product'))->setStatusCode(201);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Transaction $transaction, $id)
+    public function show(Transaction $transaction)
     {
-        $user = User::fineOrFail($id);
-        $price = $user->getPrice();
-
-        $transaction = [
-            'product_id' => Transaction::product()->first()->id,
-            'user_id' => Transaction::user()->first()->id,
-            'amount' => amount,
-            'price' => amount * $price
-        ];
+        return Response::json($transaction->load('product'))->setStatusCode(200);
     }
 
     /**
@@ -53,11 +61,20 @@ class TransactionController extends Controller
      */
     public function update(Request $request, Transaction $transaction)
     {
-        $attributes = request()->validate([
-            'amount' => 'required | int | min:1',
+        $transaction->update([
+            'amount' => $request->get('amount'),
         ]);
 
-        $transaction = Transaction::update($attributes);
+        $product = Product::findOrFail($request->product_id);
+        $amount = $request->amount;
+        $price = $product->price * $amount;
+
+        $transaction->update([
+            'amount' => $request->get('amount'),
+            'price' => $price,
+        ]);
+
+
         return Response::json($transaction)->setStatusCode(201);
     }
 

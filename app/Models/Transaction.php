@@ -12,6 +12,7 @@ class Transaction extends Model
     protected $fillable = [
         'product_id',
         'amount',
+        'price'
     ];
 
     public function user(){
