@@ -10,7 +10,8 @@ class Transaction extends Model
     use HasFactory;
 
     protected $fillable = [
-        'price'
+        'product_id',
+        'amount',
     ];
 
     public function user(){

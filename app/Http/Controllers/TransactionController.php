@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
@@ -23,12 +24,12 @@ class TransactionController extends Controller
     {
         $attributes = request()->validate([
             'product_id' => 'required | int | exists:products,id',
-            'user_id' => 'required | int | exists:users,id',
             'amount' => 'required | int | min:1',
         ]);
 
         $transaction = Transaction::create($attributes);
-        return Response::json($transaction)->setStatusCode(201);
+        $product_price = Product::find(id());
+        return Response::json($transaction->load('product:title,id'))->setStatusCode(201);
     }
 
     /**

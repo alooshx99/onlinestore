@@ -16,7 +16,7 @@ class ProductController extends Controller
     {
         $low_price_products = Product::where('price', '<', 100)
             ->orderBy('price', 'desc')
-            ->with('category')
+            ->with('category:title,id')
             ->get();
 
         return Response::json($low_price_products)->setStatusCode(200);
@@ -28,12 +28,12 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $attributes = $request->validate([
-            'title' => 'required | min:5 | max:255 | string',
+            'title' => 'required | min:3 | max:255 | string',
             'price' => 'required | int',
             'quantity' => 'required | int',
             'image' => 'nullable | string | min:5 | max:255',
             'description' => 'required | min:5 | max:255 | string',
-            'category_id' => 'required | int',
+            'category_id' => 'required | int | exists:categories,id',
         ]);
 
         $posts = Product::create($attributes);
@@ -54,7 +54,7 @@ class ProductController extends Controller
     public function update(Request $request, Product $product)
     {
         $attributes = $request->validate([
-            'title' => 'sometimes | min:5 | max:255 | string',
+            'title' => 'sometimes | min:3 | max:255 | string',
             'price' => 'sometimes | int',
             'quantity' => 'sometimes | int',
             'image' => 'sometimes | string | min:5 | max:255',

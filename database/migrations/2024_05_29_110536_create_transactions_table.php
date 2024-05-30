@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('price');
+            $table->unsignedBigInteger('price')->default(0);
             $table->unsignedBigInteger('amount')->default(0);
-            $table->foreignId('products_id')->constrained();
-            $table->foreignId('user_id')->constrained();
+            $table->foreignId('product_id')->constrained();
+            //$table->foreignId('user_id')->constrained();
             $table->timestamps();
         });
     }
