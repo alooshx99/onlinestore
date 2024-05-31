@@ -2,6 +2,8 @@
 
 namespace App\Enums;
 
+use MyCLabs\Enum\Enum;
+
 enum ProductStatusEnum: string
 {
     case Available = 'Available';

@@ -6,6 +6,7 @@ use App\Enums\ProductStatusEnum;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
+use MyCLabs\Enum\Enum;
 
 
 class ProductController extends Controller
@@ -38,6 +39,7 @@ class ProductController extends Controller
         ]);
 
         $status = ProductStatusEnum::getStatus($request->quantity);
+
 
         $attributes = Product::create([
             'title' => $request->title,
