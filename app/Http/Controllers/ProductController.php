@@ -41,9 +41,8 @@ class ProductController extends Controller
             'category_id' => 'required | int | exists:categories,id',
         ]);
 
-        $user = User::find(Auth::id());
-        $product = $user->products()->create($attributes);
-       // $product = Auth::user()->products()->create($attributes);
+
+        $product = Product::create($attributes);
         return Response::json($product)->setStatusCode(201);
     }
 

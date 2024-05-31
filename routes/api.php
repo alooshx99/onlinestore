@@ -27,6 +27,6 @@ Route::apiResource('/products', ProductController::class)
     ->only(['index', 'show']);
 Route::apiResource('/products', ProductController::class)
     ->only(['store', 'update','destroy'])
-    ->middleware('auth:sanctum');
+    ->middleware(['auth:sanctum','role:admin']);
 
 Route::apiResource('/transactions', TransactionController::class)->middleware('auth:sanctum');

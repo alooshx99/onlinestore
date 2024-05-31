@@ -41,14 +41,14 @@ class TransactionController extends Controller
         $amount = $request->amount;
         $price = $product->price * $amount;
 
-        $attributes = Transaction::create([
+        $user = User::find(Auth::id());
+
+        $transaction = $user->transactions()->create([
             'user_id' => $request->user_id,
             'product_id' => $product->id,
             'amount' => $amount,
             'price' => $price,
         ]);
-        $user = User::find(Auth::id());
-        $transaction = $user->transaction()->create($attributes);
 
         return Response::json($transaction->load('product'))->setStatusCode(201);
     }
