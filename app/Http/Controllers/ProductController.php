@@ -29,7 +29,7 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $attributes = $request->validate([
             'title' => 'required | min:3 | max:255 | string',
             'price' => 'required | int',
             'quantity' => 'required | int | min:0',
@@ -38,19 +38,9 @@ class ProductController extends Controller
             'category_id' => 'required | int | exists:categories,id',
         ]);
 
-        $status = ProductStatusEnum::getStatus($request->quantity);
+        $products = Product::create($attributes);
 
-
-        $attributes = Product::create([
-            'title' => $request->title,
-            'price' => $request->price,
-            'quantity' => $request->quantity,
-            'description' => $request->description,
-            'category_id' => $request->category_id,
-            'image' => $request->image,
-            'status' => $status,
-        ]);
-        return Response::json($attributes)->setStatusCode(201);
+        return Response::json($products)->setStatusCode(201);
     }
 
     /**

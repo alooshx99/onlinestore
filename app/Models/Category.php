@@ -5,17 +5,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Product;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Category extends Model
 {
-    use HasFactory;
+    use SoftDeletes, HasFactory;
 
     protected $fillable = [
         'title',
         ];
 
+    protected $table = 'categories';
 
-    public static function boot()
+    /*public static function boot()
     {
         parent::boot();
         static::deleting(function ($category) {
@@ -24,7 +26,7 @@ class Category extends Model
             };
         });
 
-    }
+    }*/
 
     public function products(){
         return $this->hasMany(Product::class);
