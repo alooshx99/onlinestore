@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Enums\ProductStatusEnum;
 use App\Models\Product;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
-use MyCLabs\Enum\Enum;
+
 
 
 class ProductController extends Controller
@@ -17,6 +19,7 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         $low_price_products = Product::where('price', '<', 100)
+            ->where('status', ProductStatusEnum::Draft)
             ->orderBy('price', 'desc')
             ->with('category:title,id')
             ->get();
@@ -38,9 +41,9 @@ class ProductController extends Controller
             'category_id' => 'required | int | exists:categories,id',
         ]);
 
-        $products = Product::create($attributes);
+        $product = Product::create($attributes);
 
-        return Response::json($products)->setStatusCode(201);
+        return Response::json($product)->setStatusCode(201);
     }
 
     /**
