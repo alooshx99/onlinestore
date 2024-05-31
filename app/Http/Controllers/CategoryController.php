@@ -36,7 +36,7 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        return Response::json($category ->load('products'))->setStatusCode(200);
+        return Response::json($category->load('products'))->setStatusCode(200);
     }
 
     /**

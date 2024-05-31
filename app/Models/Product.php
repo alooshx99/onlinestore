@@ -23,6 +23,18 @@ class Product extends Model
     {
         return $this->belongsTo(Category::class);
     }
+
+    public static function boot()
+    {
+        parent::boot();
+        static::deleting(function ($product)
+        {
+            $product->transactions()->delete();
+        }
+        );
+
+    }
+
     public function transactions(){
         return $this->hasMany(Transaction::class);
     }

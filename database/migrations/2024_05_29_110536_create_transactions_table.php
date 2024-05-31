@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('price')->default(0);
             $table->unsignedBigInteger('amount')->default(0);
-            $table->foreignId('product_id')->constrained();
-            //$table->foreignId('user_id')->constrained();
+            $table->foreignId('product_id')->constrained('products');
+            //$table->foreignId('user_id')->constrained('users');
             $table->timestamps();
         });
     }

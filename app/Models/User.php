@@ -49,6 +49,16 @@ class User extends Authenticatable
         ];
     }
 
+    public static function boot()
+    {
+        parent::boot();
+        static::deleting(function ($user)
+        {
+            $user->transactions()->delete();
+        }
+        );
+
+    }
     public function transactions(){
         return $this->hasMany(Transaction::class);
     }
