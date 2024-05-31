@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\Transaction;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
 
 class TransactionController extends Controller
@@ -39,12 +41,14 @@ class TransactionController extends Controller
         $amount = $request->amount;
         $price = $product->price * $amount;
 
-        $transaction = Transaction::create([
+        $attributes = Transaction::create([
             'user_id' => $request->user_id,
             'product_id' => $product->id,
             'amount' => $amount,
             'price' => $price,
         ]);
+        $user = User::find(Auth::id());
+        $transaction = $user->transaction()->create($attributes);
 
         return Response::json($transaction->load('product'))->setStatusCode(201);
     }
