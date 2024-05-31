@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Spatie\Permission\Models\Role;
 
 return new class extends Migration
 {
@@ -116,6 +117,21 @@ return new class extends Migration
         app('cache')
             ->store(config('permission.cache.store') != 'default' ? config('permission.cache.store') : null)
             ->forget(config('permission.cache.key'));
+
+
+
+        $adminRole = Role::create(['name' => 'admin']);
+        $clientRole = Role::create(['name' => 'client']);
+
+        $user = \App\Models\User::create([
+            'name' => 'ali',
+            'username' => 'admin',
+            'password' => '123456',
+            'email' => 'admin@admin.com'
+        ]);
+
+        $user->assignRole($adminRole);
+
     }
 
     /**

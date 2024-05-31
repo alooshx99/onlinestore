@@ -48,8 +48,8 @@ class CategoryController extends Controller
             'title' => 'sometimes | unique:categories,title | min:5 | max:255 | string',
         ]);
 
-        $categories = Category::update($attributes);
-        return Response::json($categories)->setStatusCode(201);
+        $category->update($attributes);
+        return Response::json($category)->setStatusCode(201);
     }
 
     /**

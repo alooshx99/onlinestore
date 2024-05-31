@@ -24,8 +24,4 @@ class Transaction extends Model
     }
 
 
-    public function getPrice(){
-        return $this->product?$this->product->price:'not found';
-    }
-
 }

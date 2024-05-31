@@ -38,6 +38,7 @@ class TransactionController extends Controller
         $product = Product::findOrFail($request->product_id);
         $amount = $request->amount;
         $price = $product->price * $amount;
+
         $transaction = Transaction::create([
             'user_id' => $request->user_id,
             'product_id' => $product->id,
@@ -59,18 +60,20 @@ class TransactionController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Transaction $transaction)
+    public function update(Request $request, $id)
     {
-        $transaction->update([
-            'amount' => $request->get('amount'),
+        $request->validate([
+            'amount' => 'required | int | min:1',
         ]);
 
-        $product = Product::findOrFail($request->product_id);
+        $transaction = Transaction::findOrFail($id);
+        $product = $transaction->product;
         $amount = $request->amount;
         $price = $product->price * $amount;
 
+
         $transaction->update([
-            'amount' => $request->get('amount'),
+            'amount' => $amount,
             'price' => $price,
         ]);
 
@@ -83,6 +86,7 @@ class TransactionController extends Controller
      */
     public function destroy(Transaction $transaction)
     {
-        //
+        $transaction->delete();
+        return Response::json($transaction)->setStatusCode(204);
     }
 }

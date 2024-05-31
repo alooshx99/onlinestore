@@ -62,8 +62,8 @@ class ProductController extends Controller
 
         ]);
 
-        $posts = Product::update($attributes);
-        return Response::json($posts)->setStatusCode(201);
+        $product->update($attributes);
+        return Response::json($product)->setStatusCode(201);
     }
 
     /**
