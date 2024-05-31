@@ -22,7 +22,7 @@ class RegisterController extends Controller
             'password' => 'required|string',
         ]);
 
-        $user = User::create($attribute);
+        $user = User::create($attribute)->assignRole('client')->load('roles');;
 
         return Response::json($user)->setStatusCode(201);
 

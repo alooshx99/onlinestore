@@ -43,7 +43,7 @@ class ProductController extends Controller
 
         $user = User::find(Auth::id());
         $product = $user->products()->create($attributes);
-
+       // $product = Auth::user()->products()->create($attributes);
         return Response::json($product)->setStatusCode(201);
     }
 
