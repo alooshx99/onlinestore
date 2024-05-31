@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\ProductStatusEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -15,7 +16,8 @@ class Product extends Model
         'price',
         'quantity',
         'category_id',
-        'image_url'
+        'image_url',
+        'status'
     ];
 
 
@@ -37,6 +39,15 @@ class Product extends Model
 
     public function transactions(){
         return $this->hasMany(Transaction::class);
+    }
+
+
+    protected $casts = [
+        'status' => ProductStatusEnum::class
+    ];
+
+    public function getStatusAttribute(){
+        return ProductStatusEnum::getStatus($this->quantity);
     }
 
 }

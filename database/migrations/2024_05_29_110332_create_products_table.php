@@ -19,6 +19,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->unsignedInteger('likes')->default(0);
             $table->string('image_url')->nullable();
+            $table->string('status')->default(\App\Enums\ProductStatusEnum::SoldOut->value);
             $table->foreignId('category_id')->constrained('categories');
             $table->timestamps();
         });

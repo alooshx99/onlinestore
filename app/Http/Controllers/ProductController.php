@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ProductStatusEnum;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
@@ -27,17 +28,27 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        $attributes = $request->validate([
+        $request->validate([
             'title' => 'required | min:3 | max:255 | string',
             'price' => 'required | int',
-            'quantity' => 'required | int',
+            'quantity' => 'required | int | min:0',
             'image' => 'nullable | string | min:5 | max:255',
             'description' => 'required | min:5 | max:255 | string',
             'category_id' => 'required | int | exists:categories,id',
         ]);
 
-        $posts = Product::create($attributes);
-        return Response::json($posts)->setStatusCode(201);
+        $status = ProductStatusEnum::getStatus($request->quantity);
+
+        $attributes = Product::create([
+            'title' => $request->title,
+            'price' => $request->price,
+            'quantity' => $request->quantity,
+            'description' => $request->description,
+            'category_id' => $request->category_id,
+            'image' => $request->image,
+            'status' => $status,
+        ]);
+        return Response::json($attributes)->setStatusCode(201);
     }
 
     /**
